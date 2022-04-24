@@ -1,17 +1,35 @@
 import './index.scss'
 import Loader from 'react-loaders'
 import AnimatedLetters from '../AnimatedLetters';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import emailjs from '@emailjs/browser'
+
 
 const Contact = () => {
 
     const [letterClass, setLetterClass] = useState('text-animate')
+    const refForm = useRef()
 
     useEffect(() => {
         return setTimeout(() => {
             setLetterClass('text-animate-hover')
         }, 3000)
     }, [])
+
+    const sendEmail = (e) => {
+        e.preventDefault()
+
+        emailjs.sendForm('gmail', 'template_3xlmx53', refForm.current, 'kysx7lMJ2hPy6jOMR')
+            .then(
+                () => {
+                    alert('Messsage sent successfully!')
+                    window.location.reload(false)
+                },
+                () => {
+                    alert('Failed to send the message, please try again')
+                }
+            )
+    }
 
     return (
         <>
@@ -23,7 +41,7 @@ const Contact = () => {
                     <p>I am interested in freelance opportunities - especially ambitious or large projects. However, if you have other requests or questions don't hesitate to contact me using the form below either.</p>
 
                     <div className='contact-form'>
-                        <form>
+                        <form ref={refForm} onSubmit={sendEmail}>
                             <ul>
                                 <li className='half'>
                                     <input type='text' name='name' placeholder='Name' required />
